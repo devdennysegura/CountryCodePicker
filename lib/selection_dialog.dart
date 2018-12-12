@@ -11,32 +11,31 @@ class SelectionDialog extends StatefulWidget {
   SelectionDialog(this.elements, this.favoriteElements);
 
   @override
-  State<StatefulWidget> createState() => new _SelectionDialogState();
+  State<StatefulWidget> createState() => _SelectionDialogState();
 }
 
 class _SelectionDialogState extends State<SelectionDialog> {
-  /// this is useful for filtering purpose
   List<CountryCode> showedElements = [];
 
   @override
-  Widget build(BuildContext context) => new SimpleDialog(
-      title: new Column(
+  Widget build(BuildContext context) => SimpleDialog(
+      title: Column(
         children: <Widget>[
-          new TextField(
-            decoration: new InputDecoration(prefixIcon: new Icon(Icons.search)),
+          TextField(
+            decoration: InputDecoration(prefixIcon: Icon(Icons.search)),
             onChanged: _filterElements,
           ),
         ],
       ),
       children: [
         widget.favoriteElements.isEmpty
-            ? new Container()
-            : new Column(
+            ? Container()
+            : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[]
                   ..addAll(widget.favoriteElements
                       .map(
-                        (f) => new SimpleDialogOption(
+                        (f) => SimpleDialogOption(
                               child: Flex(
                                 direction: Axis.horizontal,
                                 children: <Widget>[
@@ -53,7 +52,7 @@ class _SelectionDialogState extends State<SelectionDialog> {
                                   ),
                                   Flexible(
                                     fit: FlexFit.tight,
-                                    child: new Text(
+                                    child: Text(
                                       f.toLongString(),
                                       overflow: TextOverflow.fade,
                                     ),
@@ -66,10 +65,10 @@ class _SelectionDialogState extends State<SelectionDialog> {
                             ),
                       )
                       .toList())
-                  ..add(new Divider())),
+                  ..add(Divider())),
       ]..addAll(showedElements
           .map(
-            (e) => new SimpleDialogOption(
+            (e) => SimpleDialogOption(
                   key: Key(e.toLongString()),
                   child: Flex(
                     direction: Axis.horizontal,

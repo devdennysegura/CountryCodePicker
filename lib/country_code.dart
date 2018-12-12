@@ -5,22 +5,27 @@ class CElement = CountryCode with ToAlias;
 
 /// Country element. This is the element that contains all the information
 class CountryCode {
-  /// the name of the country
   String name;
-
-  /// the flag of the country
   String flagUri;
-
-  /// the country code (IT,AF..)
   String code;
-
-  /// the dial code (+39,+93..)
   String dialCode;
+  String timeZone;
+  String mask;
+  String tz;
 
-  CountryCode({this.name, this.flagUri, this.code, this.dialCode});
+  CountryCode({
+    this.name,
+    this.flagUri,
+    this.code,
+    this.dialCode,
+    this.mask,
+    this.timeZone,
+    this.tz,
+  });
 
   @override
-  String toString() => "$dialCode";
+  String toString() => '$dialCode';
 
-  String toLongString() => "$dialCode $name";
+  String toLongString() => '$name';
+  Map<String, dynamic> toJSON() => {'name': name, 'code': dialCode, 'mask': mask};
 }

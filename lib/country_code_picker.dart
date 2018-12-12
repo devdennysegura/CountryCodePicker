@@ -13,6 +13,9 @@ class CountryCodePicker extends StatefulWidget {
   final List<String> favorite;
   final TextStyle textStyle;
   final EdgeInsetsGeometry padding;
+  final dynamic filterBy;
+  final bool initWithTimeZone;
+  final String timeZone = DateTime.now().timeZoneName.toUpperCase();
 
   CountryCodePicker({
     this.onChanged,
@@ -20,22 +23,28 @@ class CountryCodePicker extends StatefulWidget {
     this.favorite = const [],
     this.textStyle,
     this.padding = const EdgeInsets.all(0.0),
+    this.filterBy,
+    this.initWithTimeZone,
   });
 
   @override
   State<StatefulWidget> createState() {
     List<Map> jsonList = codes;
-
+    if (filterBy != null)
+      jsonList = jsonList
+          .where((c) => c[filterBy['path']] == filterBy['value'])
+          .toList();
     List<CountryCode> elements = jsonList
-        .map((s) => new CountryCode(
-              name: s['name'],
-              code: s['code'],
-              dialCode: s['dial_code'],
-              flagUri: 'flags/${s['code'].toLowerCase()}.png',
-            ))
+        .map((s) => CountryCode(
+            name: s['name'],
+            code: s['code'],
+            dialCode: s['dial_code'],
+            mask: s['mask'],
+            flagUri: 'flags/${s['code'].toLowerCase()}.png',
+            timeZone: s['time_zone'],
+            tz: s['tz']))
         .toList();
-
-    return new _CountryCodePickerState(elements);
+    return _CountryCodePickerState(elements);
   }
 }
 
@@ -47,40 +56,42 @@ class _CountryCodePickerState extends State<CountryCodePicker> {
   _CountryCodePickerState(this.elements);
 
   @override
-  Widget build(BuildContext context) => new FlatButton(
-        child: Flex(
-          direction: Axis.horizontal,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Image.asset(
-                  selectedItem.flagUri,
-                  package: 'country_code_picker',
-                  width: 32.0,
-                ),
+  Widget build(BuildContext context) {
+    return FlatButton(
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      child: Flex(
+        direction: Axis.horizontal,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Image.asset(
+                selectedItem.flagUri,
+                package: 'country_code_picker',
+                width: 32.0,
               ),
             ),
-            Flexible(
-              child: Text(
-                selectedItem.toString(),
-                style: widget.textStyle ?? Theme.of(context).textTheme.button,
-              ),
+          ),
+          Flexible(
+            child: Text(
+              selectedItem.toString(),
+              style: widget.textStyle ?? Theme.of(context).textTheme.button,
             ),
-          ],
-        ),
-        padding: widget.padding,
-        onPressed: _showSelectionDialog,
-      );
+          ),
+        ],
+      ),
+      onPressed: _showSelectionDialog,
+    );
+  }
 
   @override
   initState() {
-    if (widget.initialSelection != null) {
+    if (widget.initWithTimeZone != null && widget.initWithTimeZone) {
       selectedItem = elements.firstWhere(
-          (e) =>
-              (e.code.toUpperCase() == widget.initialSelection.toUpperCase()) ||
-              (e.dialCode == widget.initialSelection.toString()),
+          (e) => e.timeZone.toUpperCase() == widget.timeZone,
           orElse: () => elements[0]);
     } else {
       selectedItem = elements[0];
@@ -101,22 +112,21 @@ class _CountryCodePickerState extends State<CountryCodePicker> {
   }
 
   void _showSelectionDialog() {
-    showDialog(
+    showDialog<CountryCode>(
       context: context,
-      builder: (_) => new SelectionDialog(elements, favoriteElements),
-    ).then((e) {
+      builder: (_) => SelectionDialog(elements, favoriteElements),
+    ).then((CountryCode e) {
       if (e != null) {
         setState(() {
           selectedItem = e;
         });
-
         _publishSelection(e);
       }
     });
   }
 
   void _publishSelection(CountryCode e) {
-    if (widget.onChanged != null) {
+    if (mounted && widget.onChanged != null) {
       widget.onChanged(e);
     }
   }

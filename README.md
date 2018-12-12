@@ -4,8 +4,10 @@
 
 A flutter package for showing a country code selector.
 
-<img src="https://raw.githubusercontent.com/Salvatore-Giordano/CountryCodePicker/master/screenshots/screen1.png" width="240"/>
-<img src="https://raw.githubusercontent.com/Salvatore-Giordano/CountryCodePicker/master/screenshots/screen2.png" width="240"/>
+<div style="display:flex;flex-direction:row;">
+        <img src="screenshots/screen1.png" alt="screen_01" height="300" />
+        <img src="screenshots/screen2.png" alt="screen_02" height="300" />
+</div>
 
 ## Usage
 
