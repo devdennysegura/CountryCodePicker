@@ -27,5 +27,10 @@ class CountryCode {
   String toString() => '$dialCode';
 
   String toLongString() => '$name';
-  Map<String, dynamic> toJSON() => {'name': name, 'code': dialCode, 'mask': mask};
+  Map<String, dynamic> toJSON() => {
+        'name': name,
+        'reg_code': code,
+        'code': dialCode,
+        'mask': mask,
+      };
 }
