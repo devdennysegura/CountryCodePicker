@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
               borderRadius: BorderRadius.circular(8.0),
             ),
             onChange: (Map<String, dynamic> v) {
-              print('hola bebe $v');
+              print('$v');
             },
           ),
         ),
