@@ -83,8 +83,9 @@ class FlagTextInputState extends State<FlagTextInput> {
   );
 
   void onChangeFlag(CountryCode cc) {
+    String mask = cc.mask ?? '';
+    mask = mask.isEmpty ? '000000000000' : mask;
     selectedItem = cc;
-    print(cc);
     controller.updateMask(cc.mask);
     publishDetail(null);
   }
