@@ -86,7 +86,8 @@ class FlagTextInputState extends State<FlagTextInput> {
     String mask = cc.mask ?? '';
     mask = mask.isEmpty ? '000000000000' : mask;
     selectedItem = cc;
-    controller.updateMask(cc.mask);
+    controller.updateText('');
+    controller.updateMask(mask);
     publishDetail(null);
   }
 
